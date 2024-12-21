@@ -1,0 +1,29 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block style %}
+
+    <style>
+        body {
+            background-image: url('{% static "images/k2_home.jfif" %}');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            color: white;
+        }
+    </style>
+
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container text-center text-light mt-5">
+        <div class="p-5 mb-4 bg-dark bg-opacity-75 rounded-3">
+            <h1>The End Point</h1>
+            <h2>Eight-Thousanders Climbing Community</h2>
+            <p class="lead">Discover the world’s highest peaks and share your adventures with fellow climbers.</p>
+            <a href="{% url 'peaks_dashboard' %}" class="btn btn-outline-light btn-lg">Explore Peaks</a>
+        </div>
+    </div>
+
+{% endblock %}

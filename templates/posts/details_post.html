@@ -1,0 +1,90 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block style %}
+    <style>
+        body {
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <!-- Post's Details -->
+    <div class="mb-3 p-3 mt-1 bg-dark rounded-3">
+        <h3>{{ post.title }}</h3>
+        <small>Posted by {{ post.author }} on {{ post.created_at|date:"d-M-Y" }}</small><br>
+        <small>Category: {{ post.category }}</small><br>
+        <small>Likes: {{ post.post_likes.count }}</small>
+        <hr>
+        {% if post.post_image %}
+            <img src="{{ post.post_image.url }}" alt="Post Image"
+                 style="width: 400px; height: 300px; object-fit: cover;">
+        {% endif %}
+        <p>{{ post.content| linebreaks }}</p>
+
+        <hr>
+
+        <!-- Like Form -->
+        <form method="post" action="{% url 'like-post' post.id %}">
+            {% csrf_token %}
+            <!-- Like Button -->
+            <button type="submit" class="btn btn-outline-light">Like</button>
+        </form>
+
+        <hr>
+
+        <!-- Form buttons -->
+        <div id="action-buttons">
+            {% if user.is_authenticated and user.profile == post.author %}
+                <a class="btn btn-outline-light me-2" href="{% url 'edit-post' post.pk %}">Edit</a>
+                <a class="btn btn-outline-light me-2" href="{% url 'delete-post' post.pk %}">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Comments Form -->
+    {% if user.is_authenticated %}
+        <div class="p-2 mb-4">
+            <h4 class="text-dark mb-0">Add Comment</h4>
+            <form action='{% url 'add_comment' post.id %}' method="POST">
+                {% csrf_token %}
+                {{ comment_form.content.label_tag }}
+                {{ comment_form.content }}
+                <button type="submit" class="btn btn-outline-dark mt-3">Comment</button>
+            </form>
+        </div>
+    {% else %}
+        <p class="text-dark p-2">Please <a href="{% url 'login' %}">log in</a> to comment.</p>
+    {% endif %}
+
+    <!-- Comments Display -->
+    <div class="p-2 mb-1">
+        <h4 class=" text-dark mb-0">Comments </h4>
+
+        <hr class="text-dark">
+        {% if comments %}
+            <ul class="list-group">
+                {% for comment in comments %}
+                    <li class=" list-group-item bg-dark bg-opacity-50 text-light mb-2">
+                        <strong>{{ comment.author }}</strong> said:
+                        <hr>
+                        <p>{{ comment.content }}</p>
+                        <small>
+                            Posted on {{ comment.created_at|date:"d-M-Y H:i" }} |
+                            {% if user.is_authenticated and user.profile == comment.author %}
+                                <a class='text-dark' href="{% url 'details_comment' post.pk comment.pk %}">More
+                                    Details</a>
+                            {% endif %}
+                        </small>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-dark p-2">No comments yet. Be the first to comment!</p>
+        {% endif %}
+    </div>
+    <hr class="text-dark">
+
+{% endblock %}
