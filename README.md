@@ -17,7 +17,7 @@ peaks on Earth.
 
 **1.Clone the repository:**
 
-    git clone https://github.com/DenislavaVasileva/theEndPoint.git
+    git clone https://github.com/whereis981/theEndPoint.git
 
 **2.Run the following command to install the listed requirements:**
 
